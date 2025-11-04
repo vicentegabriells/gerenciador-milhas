@@ -27,4 +27,8 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    @GetMapping("/teste-auth")
+        public ResponseEntity<String> testeAutenticacao() {
+    return ResponseEntity.ok("Você está autenticado!");
+}
 }
