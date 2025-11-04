@@ -1,7 +1,5 @@
 package br.com.milhas.gerenciador.model;
 
-package br.com.milhas.gerenciador.model;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
