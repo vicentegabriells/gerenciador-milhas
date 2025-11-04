@@ -2,7 +2,7 @@ package br.com.milhas.gerenciador.controller;
 
 import br.com.milhas.gerenciador.dto.CartaoCadastroDTO;
 import br.com.milhas.gerenciador.dto.CartaoResponseDTO;
-import br.com.milhas.gerenciador.model.Usuario;
+// import br.com.milhas.gerenciador.model.Usuario;
 import br.com.milhas.gerenciador.service.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
