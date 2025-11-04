@@ -8,18 +8,20 @@ public record CartaoResponseDTO(
         Long id,
         String nome,
         BigDecimal saldoDePontos,
+        BigDecimal fatorConversao, // --- NOVO CAMPO ADICIONADO ---
         String nomeBandeira,
         String nomePrograma
 ) {
     
-    // Construtor auxiliar para facilitar a conversão da Entidade Cartao para este DTO
+    // Construtor auxiliar para facilitar a conversão
     public CartaoResponseDTO(Cartao cartao) {
         this(
                 cartao.getId(),
                 cartao.getNome(),
                 cartao.getSaldoDePontos(),
-                cartao.getBandeira().getNome(), // Pega o nome da bandeira
-                cartao.getProgramaDePontos().getNome() // Pega o nome do programa
+                cartao.getFatorConversao(), // --- MAPEANDO O NOVO CAMPO ---
+                cartao.getBandeira().getNome(),
+                cartao.getProgramaDePontos().getNome()
         );
     }
 }

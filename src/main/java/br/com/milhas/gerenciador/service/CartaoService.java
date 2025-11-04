@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Service
 public class CartaoService {
 
-    // 1. Injeta todos os repositórios que vamos precisar
     @Autowired
     private CartaoRepository cartaoRepository;
     @Autowired
@@ -31,12 +30,8 @@ public class CartaoService {
 
     /**
      * Cadastra um novo cartão para o usuário logado.
-     * @param dto Os dados do cartão (nome, saldo, bandeiraId, programaId).
-     * @param emailUsuarioLogado O e-mail do usuário vindo do token JWT.
-     * @return O cartão salvo, convertido para CartaoResponseDTO.
      */
     public CartaoResponseDTO cadastrar(CartaoCadastroDTO dto, String emailUsuarioLogado) {
-        // 2. Busca as entidades relacionadas no banco de dados
         Usuario usuario = usuarioRepository.findByEmail(emailUsuarioLogado)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -46,37 +41,31 @@ public class CartaoService {
         ProgramaDePontos programa = programaRepository.findById(dto.programaId())
                 .orElseThrow(() -> new RuntimeException("Programa de pontos não encontrado"));
 
-        // 3. Cria a nova entidade Cartao
         Cartao novoCartao = new Cartao();
         novoCartao.setNome(dto.nome());
         novoCartao.setSaldoDePontos(dto.saldoDePontos());
-        novoCartao.setUsuario(usuario); // Associa ao usuário logado
-        novoCartao.setBandeira(bandeira); // Associa à bandeira
-        novoCartao.setProgramaDePontos(programa); // Associa ao programa
+        novoCartao.setFatorConversao(dto.fatorConversao()); // --- LINHA ADICIONADA ---
+        novoCartao.setUsuario(usuario);
+        novoCartao.setBandeira(bandeira);
+        novoCartao.setProgramaDePontos(programa);
 
-        // 4. Salva o novo cartão no banco
         Cartao cartaoSalvo = cartaoRepository.save(novoCartao);
-
-        // 5. Retorna o DTO de resposta
+        
         return new CartaoResponseDTO(cartaoSalvo);
     }
 
     /**
      * Lista todos os cartões pertencentes ao usuário logado.
-     * @param emailUsuarioLogado O e-mail do usuário vindo do token JWT.
-     * @return Uma lista de CartaoResponseDTO.
      */
     public List<CartaoResponseDTO> listarPorUsuario(String emailUsuarioLogado) {
-        // 1. Busca o usuário pelo e-mail
         Usuario usuario = usuarioRepository.findByEmail(emailUsuarioLogado)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // 2. Busca os cartões usando o método que criamos no CartaoRepository
         List<Cartao> cartoesDoUsuario = cartaoRepository.findByUsuarioId(usuario.getId());
 
-        // 3. Converte a lista de Entidades (Cartao) para uma lista de DTOs (CartaoResponseDTO)
+        // O mapeamento aqui já funciona por causa da nossa atualização no CartaoResponseDTO
         return cartoesDoUsuario.stream()
-                .map(CartaoResponseDTO::new) // Usa o construtor do DTO
+                .map(CartaoResponseDTO::new)
                 .collect(Collectors.toList());
     }
 }

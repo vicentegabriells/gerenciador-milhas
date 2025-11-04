@@ -21,6 +21,10 @@ public class Cartao {
     @Column(nullable = false)
     private BigDecimal saldoDePontos; // "Controlar o saldo atual de pontos"
 
+    // --- NOVO CAMPO ADICIONADO ---
+    @Column(nullable = false)
+    private BigDecimal fatorConversao; // Ex: 2.2 (pontos por dólar/real)
+
     // --- RELACIONAMENTOS ---
 
     // Muitos cartões para Um usuário
