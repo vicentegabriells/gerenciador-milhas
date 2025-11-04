@@ -15,28 +15,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api/login") // Endpoint de login
 public class AutenticacaoController {
 
+    // Componente do Spring Security que gerencia a autenticação
     @Autowired
-    private AuthenticationManager manager; // Componente do Spring Security para autenticar
+    private AuthenticationManager manager;
 
+    // Nosso serviço de token
     @Autowired
-    private TokenService tokenService; // Nosso serviço de token
+    private TokenService tokenService;
 
+    // Mapeia para requisições POST em "/api/login"
     @PostMapping
     public ResponseEntity<TokenJwtDTO> efetuarLogin(@RequestBody DadosAutenticacaoDTO dados) {
-        // 1. Cria um objeto de autenticação com os dados recebidos
+        // 1. Cria um token de autenticação (ainda não validado)
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
 
-        // 2. Chama o AuthenticationManager para validar as credenciais
+        // 2. Efetivamente autentica o usuário (valida e-mail e senha)
+        // O Spring chama nosso AutenticacaoService e PasswordEncoder aqui por baixo dos panos
         Authentication authentication = manager.authenticate(authenticationToken);
 
-        // 3. Se as credenciais forem válidas, gera o token JWT
+        // 3. Se a autenticação deu certo, pega o objeto Usuario
         var usuarioAutenticado = (Usuario) authentication.getPrincipal();
+
+        // 4. Gera o Token JWT para este usuário
         String tokenJWT = tokenService.gerarToken(usuarioAutenticado);
 
-        // 4. Retorna o token para o cliente
+        // 5. Retorna o token para o cliente com status 200 OK
         return ResponseEntity.ok(new TokenJwtDTO(tokenJWT));
     }
 }

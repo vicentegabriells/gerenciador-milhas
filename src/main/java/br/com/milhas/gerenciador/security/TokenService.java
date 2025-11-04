@@ -17,9 +17,11 @@ import java.util.Date;
 @Service
 public class TokenService {
 
+    // 1. Injeta o valor da propriedade 'api.security.token.secret' do application.properties
     @Value("${api.security.token.secret}")
     private String secret;
 
+    // Converte a string secreta em uma chave criptográfica segura
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
@@ -27,15 +29,16 @@ public class TokenService {
     // Método responsável por gerar o Token JWT
     public String gerarToken(Usuario usuario) {
         try {
-            Instant expirationTime = gerarTempoDeExpiracao();
+            Instant expirationTime = gerarTempoDeExpiracao(); // Pega o tempo de expiração
 
+            // Constrói o token (Builder pattern)
             return Jwts.builder()
-                    .issuer("API Gerenciador de Milhas")         // CORREÇÃO: 'setIssuer' virou 'issuer'
-                    .subject(usuario.getEmail())                // CORREÇÃO: 'setSubject' virou 'subject'
-                    .issuedAt(new Date())                       // CORREÇÃO: 'setIssuedAt' virou 'issuedAt'
-                    .expiration(Date.from(expirationTime))      // CORREÇÃO: 'setExpiration' virou 'expiration'
-                    .signWith(getSigningKey())
-                    .compact();
+                    .issuer("API Gerenciador de Milhas")         // Quem emitiu o token
+                    .subject(usuario.getEmail())                // "Dono" do token (identificador único)
+                    .issuedAt(new Date())                       // Data da geração
+                    .expiration(Date.from(expirationTime))      // Data da expiração
+                    .signWith(getSigningKey())                  // Assina com nossa chave secreta
+                    .compact();                                 // Finaliza e retorna a string do token
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar token JWT", e);
         }
@@ -48,21 +51,21 @@ public class TokenService {
         }
 
         try {
-            // CORREÇÃO: A forma de fazer o "parse" do token mudou
-            Claims claims = Jwts.parser() // Começa com .parser()
-                    .verifyWith(getSigningKey()) // Passa a chave de verificação
+            // Faz o "parse" do token usando a chave secreta para verificar a assinatura
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSigningKey()) // Verifica se a assinatura é válida
                     .build()
-                    .parseSignedClaims(tokenJWT) // Faz o parse do token
-                    .getPayload(); // Pega o conteúdo (claims)
+                    .parseSignedClaims(tokenJWT) // Decodifica o token
+                    .getPayload(); // Pega o conteúdo (claims/dados)
 
-            return claims.getSubject();
+            return claims.getSubject(); // Retorna o e-mail (subject)
         } catch (Exception e) {
-            // Token inválido (expirado, assinatura incorreta, etc.)
+            // Se o token estiver expirado, inválido ou a assinatura errada, retorna nulo
             return null;
         }
     }
 
-    // Define o tempo de expiração do token (ex: 2 horas a partir de agora)
+    // Método privado que define a expiração do token (2 horas a partir de agora)
     private Instant gerarTempoDeExpiracao() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }

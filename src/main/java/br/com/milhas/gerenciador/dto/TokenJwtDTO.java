@@ -1,5 +1,5 @@
 package br.com.milhas.gerenciador.dto;
 
-// Este record representa o JSON que nossa API vai devolver após o login bem-sucedido
+// Representa o JSON que a API devolve após um login bem-sucedido: {"token": "..."}
 public record TokenJwtDTO(String token) {
 }

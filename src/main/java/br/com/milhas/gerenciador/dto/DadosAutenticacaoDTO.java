@@ -1,5 +1,6 @@
 package br.com.milhas.gerenciador.dto;
 
-// Este record representa o JSON que o frontend vai enviar no corpo da requisição de login
+// record é uma forma moderna (Java 16+) de criar classes imutáveis para dados.
+// Representa o JSON que o usuário envia no login: {"email": "...", "senha": "..."}
 public record DadosAutenticacaoDTO(String email, String senha) {
 }
