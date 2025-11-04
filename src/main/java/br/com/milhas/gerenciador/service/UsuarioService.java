@@ -1,11 +1,10 @@
 package br.com.milhas.gerenciador.service;
 
+import br.com.milhas.gerenciador.model.Usuario;
+import br.com.milhas.gerenciador.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import br.com.milhas.gerenciador.model.Usuario;
-import br.com.milhas.gerenciador.repository.UsuarioRepository;
 
 @Service // 1. Anotação que define esta classe como um componente de Serviço
 public class UsuarioService {
@@ -34,9 +33,4 @@ public class UsuarioService {
         // 4. Salva o novo usuário (agora com a senha criptografada) no banco
         return usuarioRepository.save(usuario);
     }
-
-    // Aqui podemos adicionar outros métodos no futuro, como:
-    // - buscarUsuarioPorId(Long id)
-    // - atualizarPerfil(Usuario usuario)
-    // - deletarUsuario(Long id)
 }
