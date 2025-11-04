@@ -1,17 +1,9 @@
 package br.com.milhas.gerenciador.model;
 
-import java.math.BigDecimal;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cartoes")
@@ -27,18 +19,21 @@ public class Cartao {
     private String nome; // Ex: "Meu Visa Infinite"
 
     @Column(nullable = false)
-    private BigDecimal saldoDePontos; // Conforme requisito: "Controlar o saldo atual de pontos"
+    private BigDecimal saldoDePontos; // "Controlar o saldo atual de pontos"
 
     // --- RELACIONAMENTOS ---
 
+    // Muitos cartões para Um usuário
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    // Muitos cartões para Uma bandeira
     @ManyToOne
     @JoinColumn(name = "bandeira_id", nullable = false)
     private Bandeira bandeira;
 
+    // Muitos cartões para Um programa de pontos
     @ManyToOne
     @JoinColumn(name = "programa_id", nullable = false)
     private ProgramaDePontos programaDePontos;
