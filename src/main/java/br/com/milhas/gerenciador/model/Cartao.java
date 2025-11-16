@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.List; // 1. IMPORTAR A LISTA
 
 @Entity
 @Table(name = "cartoes")
@@ -16,29 +17,30 @@ public class Cartao {
     private Long id;
 
     @Column(nullable = false)
-    private String nome; // Ex: "Meu Visa Infinite"
+    private String nome;
 
     @Column(nullable = false)
-    private BigDecimal saldoDePontos; // "Controlar o saldo atual de pontos"
+    private BigDecimal saldoDePontos;
 
-    // --- NOVO CAMPO ADICIONADO ---
     @Column(nullable = false)
-    private BigDecimal fatorConversao; // Ex: 2.2 (pontos por dólar/real)
+    private BigDecimal fatorConversao;
 
     // --- RELACIONAMENTOS ---
 
-    // Muitos cartões para Um usuário
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    // Muitos cartões para Uma bandeira
     @ManyToOne
     @JoinColumn(name = "bandeira_id", nullable = false)
     private Bandeira bandeira;
 
-    // Muitos cartões para Um programa de pontos
     @ManyToOne
     @JoinColumn(name = "programa_id", nullable = false)
     private ProgramaDePontos programaDePontos;
+
+    // --- NOVO RELACIONAMENTO ADICIONADO ---
+    // Um Cartão pode ter muitas Aquisições
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Aquisicao> aquisicoes;
 }
