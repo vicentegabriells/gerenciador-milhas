@@ -9,6 +9,14 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    // Método customizado: O Spring cria a consulta para buscar um usuário pelo e-mail
+    // --- Método que já existia ---
     Optional<Usuario> findByEmail(String email);
+
+    // --- 1. NOVO MÉTODO ADICIONADO ---
+    /**
+     * Busca um usuário pelo seu token de recuperação de senha.
+     * @param resetToken O token (UUID) a ser buscado.
+     * @return Um Optional contendo o usuário, se encontrado.
+     */
+    Optional<Usuario> findByResetToken(String resetToken);
 }

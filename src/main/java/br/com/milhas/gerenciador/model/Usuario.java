@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime; // 1. IMPORTAR
 import java.util.Collection;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Table(name = "usuarios")
 @Getter
 @Setter
-public class Usuario implements UserDetails { // Implementa UserDetails para o Spring Security
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,29 +30,32 @@ public class Usuario implements UserDetails { // Implementa UserDetails para o S
     @Column(nullable = false)
     private String senha;
 
-    // Relacionamento: Um usuário pode ter muitos cartões
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cartao> cartoes;
 
-    // --- MÉTODOS OBRIGATÓRIOS DO USERDETAILS ---
+    // --- 2. NOVOS CAMPOS ADICIONADOS ---
+    @Column(name = "reset_token")
+    private String resetToken; // Token para reset de senha
 
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry; // Data de expiração do token
+
+    // --- MÉTODOS OBRIGATÓRIOS DO USERDETAILS ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Define os papéis (perfis) do usuário. Por enquanto, todos são "USER".
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return this.senha; // Retorna a senha (criptografada)
+        return this.senha;
     }
 
     @Override
     public String getUsername() {
-        return this.email; // O "username" para o Spring Security será o nosso e-mail
+        return this.email;
     }
 
-    // Métodos de controle de conta. Deixamos 'true' para indicar que as contas estão ativas.
     @Override
     public boolean isAccountNonExpired() {
         return true;
