@@ -13,7 +13,7 @@ O **Gerenciador de Milhas** é uma solução didática que reúne operações b�
 
 O objetivo principal não é reproduzir a complexidade dos sistemas reais de companhias aéreas, mas sim demonstrar boas práticas de separação de camadas, testes e estruturação do domínio.
 
-Passado como requisito da disciplina de *Programação WEB I*, sob orientação do professor *George Leite*. Alunos integrantes: *Juan Wesley, Vicente Gabriel e Welber Sauan*. Bacharelado de Sistema de Informações, IFS - Campus Lagarto.
+Passado como requisito da disciplina de *Programação WEB I*, sob orientação do professor *George Leite*. Alunos integrantes: *Juan Wesley, Vicente Gabriel e Welber Sauan*. Bacharelado de Sistema de Informações, IFS-Campus Lagarto.
 
 ---
 
